@@ -1035,15 +1035,9 @@ function dailyCalorieRange() {
   };
 }
 
-function calorieStatus(totalCalories) {
+function calorieStatus() {
   const range = dailyCalorieRange();
-  if (totalCalories < range.lower) {
-    return `熱量不足`;
-  }
-  if (totalCalories > range.upper) {
-    return `熱量超過`;
-  }
-  return `熱量適中`;
+  return `建議熱量 ${range.lower}-${range.upper}`;
 }
 
 function formatTodayLabel(date = new Date()) {
@@ -1139,7 +1133,7 @@ function renderSummary() {
   elements.totalProtein.textContent = totalProtein;
   elements.totalCalories.textContent = totalCalories;
   elements.proteinRate.textContent = `蛋白質達成率${rate}%`;
-  elements.energyHint.textContent = calorieStatus(totalCalories);
+  elements.energyHint.textContent = calorieStatus();
 }
 
 function currentRecord() {
