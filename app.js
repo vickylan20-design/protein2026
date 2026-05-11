@@ -564,7 +564,7 @@ const foods = [
     protein_g: 32,
     calories: 820,
     egg_unit: 5,
-    meal_tags: ["lunch"],
+    meal_tags: ["lunch", "dinner"],
     estimate_type: "estimated",
     keywords: ["雞腿飯", "雞腿便當", "便當", "午餐"],
   },
@@ -603,7 +603,7 @@ const foods = [
     protein_g: 28,
     calories: 760,
     egg_unit: 5,
-    meal_tags: ["lunch"],
+    meal_tags: ["lunch", "dinner"],
     estimate_type: "estimated",
     keywords: ["滷排骨飯", "排骨飯", "午餐"],
   },
@@ -1173,6 +1173,52 @@ function foodGroupKey(food) {
   return `${food.category}:${food.subcategory}:${food.food_name}`;
 }
 
+const mealSortOrder = {
+  breakfast: ["latte", "soy", "milk", "yogurt", "egg", "pancake", "burger"],
+  lunch: ["buffet", "protein", "bento", "side", "soup", "beef-noodle", "steak", "hotpot"],
+  dinner: ["bento", "side", "soup", "sushi", "buffet", "protein"],
+};
+
+function mealSortBucket(food, meal) {
+  if (meal === "breakfast") {
+    if (food.subcategory === "latte") return "latte";
+    if (food.category === "soy") return "soy";
+    if (food.subcategory === "milk") return "milk";
+    if (food.subcategory === "yogurt" || food.subcategory === "yogurt-drink") return "yogurt";
+    if (food.category === "egg") return "egg";
+    if (food.subcategory === "pancake") return "pancake";
+    if (food.subcategory === "burger") return "burger";
+  }
+
+  if (meal === "lunch") {
+    if (food.category === "buffet") return "buffet";
+    if (food.id === "steak") return "steak";
+    if (food.category === "meat" || food.category === "fish") return "protein";
+    if (food.category === "bento") return "bento";
+    if (food.category === "side") return "side";
+    if (food.subcategory === "soup") return "soup";
+    if (food.id === "beef-noodle") return "beef-noodle";
+    if (food.category === "hotpot") return "hotpot";
+  }
+
+  if (meal === "dinner") {
+    if (food.category === "bento") return "bento";
+    if (food.category === "side") return "side";
+    if (food.subcategory === "soup") return "soup";
+    if (food.category === "sushi") return "sushi";
+    if (food.category === "buffet") return "buffet";
+    if (food.category === "meat" || food.category === "fish") return "protein";
+  }
+
+  return "other";
+}
+
+function mealSortRank(food, meal) {
+  const order = mealSortOrder[meal] || [];
+  const index = order.indexOf(mealSortBucket(food, meal));
+  return index === -1 ? order.length : index;
+}
+
 function sortForMeal(results) {
   const originalOrder = new Map(foods.map((food, index) => [food.id, index]));
   const groupOrder = new Map();
@@ -1188,6 +1234,7 @@ function sortForMeal(results) {
     const bGroup = foodGroupKey(b);
     return (
       aTagged - bTagged ||
+      mealSortRank(a, state.activeMeal) - mealSortRank(b, state.activeMeal) ||
       groupOrder.get(aGroup) - groupOrder.get(bGroup) ||
       eggCount(b) - eggCount(a) ||
       originalOrder.get(a.id) - originalOrder.get(b.id)
