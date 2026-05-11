@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Egg Protein</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Noto+Sans+TC:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="phone-shell" aria-label="Egg Protein 今日蛋白質進度">
+      <section class="home-view" id="homeView">
+        <header class="top-bar">
+          <button class="icon-button record-button" id="openRecords" type="button" aria-label="查看紀錄">
+            <img src="./assets/history.svg" alt="" aria-hidden="true" />
+          </button>
+          <button class="today-button" type="button" aria-label="切換日期">
+            <span id="todayLabel">今天</span><span aria-hidden="true">⌄</span>
+          </button>
+          <button class="icon-button" id="openProfile" type="button" aria-label="設定個人資訊">
+            <img src="./assets/setting.svg" alt="" aria-hidden="true" />
+          </button>
+        </header>
+
+        <section class="goal-card" aria-labelledby="goal-title">
+          <div class="goal-title-wrap">
+            <h1 id="goal-title">您的每日攝取</h1>
+            <span class="egg-mark" aria-hidden="true">🥚</span>
+          </div>
+          <div class="goal-meter" aria-label="今日蛋白質進度">
+            <div class="goal-count">
+              <strong id="completedEggs">0</strong><span>/</span><span id="goalEggs">10</span>
+            </div>
+            <div class="meter-track">
+              <div class="meter-fill" id="goalFill"></div>
+            </div>
+          </div>
+        </section>
+
+        <nav class="meal-rings" aria-label="餐別">
+          <button class="meal-ring is-active" type="button" data-meal="breakfast">
+            <span>早餐</span>
+            <strong id="breakfastEggs">0</strong>
+          </button>
+          <button class="meal-ring" type="button" data-meal="lunch">
+            <span>午餐</span>
+            <strong id="lunchEggs">0</strong>
+          </button>
+          <button class="meal-ring" type="button" data-meal="dinner">
+            <span>晚餐</span>
+            <strong id="dinnerEggs">0</strong>
+          </button>
+        </nav>
+
+        <section class="meal-panel" aria-labelledby="activeMealTitle">
+          <div class="panel-heading">
+            <h2 id="activeMealTitle">早餐</h2>
+            <button class="add-button" id="openAddFood" type="button" aria-label="新增食物">
+              +
+            </button>
+          </div>
+          <div class="food-list" id="mealFoodList" aria-live="polite"></div>
+        </section>
+
+        <section class="summary-panel" aria-labelledby="summaryTitle">
+          <div class="summary-heading">
+            <h2 id="summaryTitle">今日總和</h2>
+            <div class="summary-tags">
+              <span class="tag tag-protein" id="proteinRate">蛋白質達成率0%</span>
+            <span class="tag tag-energy" id="energyHint">熱量不足</span>
+            </div>
+          </div>
+          <div class="summary-grid">
+            <article class="summary-item">
+              <div class="summary-icon egg-icon" aria-hidden="true">🥚</div>
+              <div>
+                <span>蛋白質</span>
+                <strong><span id="totalProtein">0</span><small>g</small></strong>
+              </div>
+            </article>
+            <div class="summary-divider" aria-hidden="true"></div>
+            <article class="summary-item">
+              <div class="summary-icon flame-icon" aria-hidden="true">🔥</div>
+              <div>
+                <span>熱量</span>
+                <strong><span id="totalCalories">0</span><small>kcal</small></strong>
+              </div>
+            </article>
+          </div>
+        </section>
+      </section>
+
+      <section class="records-view" id="recordsView" hidden>
+        <header class="records-page-header">
+          <button class="back-button" id="recordsBack" type="button" aria-label="回首頁">‹</button>
+          <div>
+            <p id="recordsHeaderMeta" hidden></p>
+            <h1 id="recordsHeaderTitle">紀錄</h1>
+          </div>
+        </header>
+        <div class="record-content" id="recordContent"></div>
+      </section>
+    </main>
+
+    <div class="sheet-backdrop" id="sheetBackdrop" hidden></div>
+    <aside class="add-sheet" id="addSheet" aria-labelledby="sheetTitle" aria-modal="true" role="dialog" hidden>
+      <div class="sheet-handle" aria-hidden="true"></div>
+      <div class="sheet-header">
+        <div>
+          <p id="sheetMealLabel">加入早餐</p>
+          <h2 id="sheetTitle">新增食物</h2>
+        </div>
+        <button class="close-button" id="closeSheet" type="button" aria-label="關閉">×</button>
+      </div>
+      <label class="search-box">
+        <span aria-hidden="true">⌕</span>
+        <input id="foodSearch" type="search" placeholder="搜尋牛奶、豆漿、水餃..." autocomplete="off" />
+      </label>
+      <div class="recommend-label" id="recommendLabel">早餐推薦</div>
+      <div class="food-results" id="foodResults"></div>
+    </aside>
+
+    <div class="modal-backdrop" id="profileBackdrop" hidden></div>
+    <section class="profile-modal" id="profileModal" aria-labelledby="profileTitle" aria-modal="true" role="dialog" hidden>
+      <div class="profile-header">
+        <h2 id="profileTitle">個人設定</h2>
+      </div>
+      <form id="profileForm" class="profile-form">
+        <label class="field">
+          <span>體重</span>
+          <span class="unit-input">
+            <input id="weightInput" type="number" inputmode="decimal" min="20" max="200" step="0.1" placeholder="例如 60" required />
+            <em>kg</em>
+          </span>
+          <small>用體重估算每日蛋白質需求。</small>
+        </label>
+        <fieldset class="field goal-field">
+          <legend>目標</legend>
+          <div class="goal-options" id="goalInput">
+            <button type="button" class="goal-option is-selected" data-factor="1" data-goal="日常維持">日常維持</button>
+            <button type="button" class="goal-option" data-factor="1.4" data-goal="減脂保肌">減脂保肌</button>
+            <button type="button" class="goal-option" data-factor="1.6" data-goal="增肌訓練">增肌訓練</button>
+            <button type="button" class="goal-option" data-factor="1.2" data-goal="熟齡肌力維持">熟齡肌力維持</button>
+          </div>
+          <small>依目標估算，不取代醫療或營養師建議。</small>
+        </fieldset>
+        <div class="profile-preview" id="profilePreview">輸入體重後會換算成蛋數</div>
+        <button class="primary-button" type="submit">確認</button>
+      </form>
+    </section>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
