@@ -380,13 +380,6 @@ h1 {
   font-size: 18px;
 }
 
-.summary-tags {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  min-width: 0;
-}
-
 .tag {
   padding: 6px 10px;
   border-radius: 999px;
@@ -402,7 +395,6 @@ h1 {
 
 .tag-energy {
   background: var(--orange);
-  margin-left: -2px;
 }
 
 .summary-grid {
@@ -417,6 +409,10 @@ h1 {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.summary-item > div:last-child {
+  min-width: 0;
 }
 
 .summary-icon {
@@ -453,6 +449,17 @@ h1 {
   padding-bottom: 2px;
   font-size: 18px;
   font-weight: 800;
+}
+
+.summary-note {
+  display: inline-flex;
+  width: max-content;
+  max-width: 100%;
+  margin: 8px 0 0;
+  padding: 5px 8px;
+  font-size: 11px;
+  line-height: 1.3;
+  white-space: normal;
 }
 
 .summary-divider {
@@ -920,10 +927,5 @@ h1 {
 
   .goal-meter {
     width: 96px;
-  }
-
-  .summary-tags .tag {
-    font-size: 11px;
-    padding-inline: 8px;
   }
 }
