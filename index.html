@@ -19,9 +19,12 @@
           <button class="icon-button record-button" id="openRecords" type="button" aria-label="查看紀錄">
             <img src="./assets/history.svg" alt="" aria-hidden="true" />
           </button>
-          <button class="today-button" type="button" aria-label="切換日期">
-            <span id="todayLabel">今天</span><span aria-hidden="true">⌄</span>
-          </button>
+          <div class="date-control">
+            <button class="today-button" id="todayButton" type="button" aria-label="切換日期">
+              <span id="todayLabel">今天</span><span aria-hidden="true">⌄</span>
+            </button>
+            <input class="date-input" id="dateInput" type="date" aria-label="選擇日期" />
+          </div>
           <button class="icon-button" id="openProfile" type="button" aria-label="設定個人資訊">
             <img src="./assets/setting.svg" alt="" aria-hidden="true" />
           </button>

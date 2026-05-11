@@ -1,6 +1,7 @@
 const EGG_PROTEIN_G = 6;
 const PROFILE_STORAGE_KEY = "eggProteinProfile";
 const LOGIN_STORAGE_KEY = "eggProteinLoggedIn";
+const MEALS_STORAGE_KEY = "eggProteinMealsByDate";
 
 const mealLabels = {
   breakfast: "早餐",
@@ -947,22 +948,81 @@ const foods = [
   },
 ];
 
-const state = {
-  activeMeal: "breakfast",
-  profile: loadProfile(),
-  isLoggedIn: localStorage.getItem(LOGIN_STORAGE_KEY) === "true",
-  meals: {
+function emptyMeals() {
+  return {
     breakfast: [],
     lunch: [],
     dinner: [],
-  },
+  };
+}
+
+function dateKeyFromDate(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function dateFromKey(dateKey) {
+  const [year, month, day] = dateKey.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
+function loadMealsByDate() {
+  try {
+    const mealsByDate = JSON.parse(localStorage.getItem(MEALS_STORAGE_KEY));
+    return mealsByDate && typeof mealsByDate === "object" ? mealsByDate : {};
+  } catch {
+    return {};
+  }
+}
+
+function loadMealsForDate(dateKey) {
+  const mealsByDate = loadMealsByDate();
+  const savedMeals = mealsByDate[dateKey] || {};
+  const meals = emptyMeals();
+
+  Object.keys(mealLabels).forEach((meal) => {
+    meals[meal] = (savedMeals[meal] || [])
+      .map((entry) => {
+        const food = foods.find((item) => item.id === entry.foodId);
+        return food ? { food, quantity: Number(entry.quantity) || 1 } : null;
+      })
+      .filter(Boolean);
+  });
+
+  return meals;
+}
+
+function saveMealsForDate(dateKey, meals) {
+  const mealsByDate = loadMealsByDate();
+  mealsByDate[dateKey] = Object.fromEntries(
+    Object.entries(meals).map(([meal, entries]) => [
+      meal,
+      entries.map((entry) => ({
+        foodId: entry.food.id,
+        quantity: entry.quantity,
+      })),
+    ]),
+  );
+  localStorage.setItem(MEALS_STORAGE_KEY, JSON.stringify(mealsByDate));
+}
+
+const state = {
+  activeMeal: "breakfast",
+  selectedDateKey: dateKeyFromDate(),
+  profile: loadProfile(),
+  isLoggedIn: localStorage.getItem(LOGIN_STORAGE_KEY) === "true",
+  meals: loadMealsForDate(dateKeyFromDate()),
 };
 
 const elements = {
   completedEggs: document.querySelector("#completedEggs"),
   goalEggs: document.querySelector("#goalEggs"),
   goalFill: document.querySelector("#goalFill"),
+  todayButton: document.querySelector("#todayButton"),
   todayLabel: document.querySelector("#todayLabel"),
+  dateInput: document.querySelector("#dateInput"),
   homeView: document.querySelector("#homeView"),
   recordsView: document.querySelector("#recordsView"),
   openRecords: document.querySelector("#openRecords"),
@@ -1047,6 +1107,22 @@ function formatTodayLabel(date = new Date()) {
 
 function formatRecordDate(date = new Date()) {
   return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 (${["日", "一", "二", "三", "四", "五", "六"][date.getDay()]})`;
+}
+
+function renderSelectedDate() {
+  const selectedDate = dateFromKey(state.selectedDateKey);
+  elements.todayLabel.textContent = formatTodayLabel(selectedDate);
+  elements.dateInput.value = state.selectedDateKey;
+}
+
+function switchDate(dateKey) {
+  if (!dateKey || dateKey === state.selectedDateKey) return;
+  state.selectedDateKey = dateKey;
+  state.meals = loadMealsForDate(dateKey);
+  renderSelectedDate();
+  renderActiveMeal();
+  renderSummary();
+  if (!elements.recordsView.hidden && state.isLoggedIn) renderRecordList();
 }
 
 function eggCount(food) {
@@ -1141,7 +1217,7 @@ function currentRecord() {
   const totalProtein = allSelectedFoods().reduce((total, entry) => total + entryProtein(entry), 0);
   const rate = Math.round((totalProtein / EGG_PROTEIN_G / goalEggs) * 100);
   return {
-    date: formatRecordDate(),
+    date: formatRecordDate(dateFromKey(state.selectedDateKey)),
     protein: totalProtein,
     rate,
     meals: Object.keys(mealLabels).map((meal) => ({
@@ -1457,6 +1533,7 @@ function addFood(foodId) {
   }
   renderActiveMeal();
   renderSummary();
+  saveMealsForDate(state.selectedDateKey, state.meals);
   closeSheet();
 }
 
@@ -1470,12 +1547,14 @@ function updateQuantity(index, delta) {
   }
   renderActiveMeal();
   renderSummary();
+  saveMealsForDate(state.selectedDateKey, state.meals);
 }
 
 function removeFood(index) {
   state.meals[state.activeMeal].splice(index, 1);
   renderActiveMeal();
   renderSummary();
+  saveMealsForDate(state.selectedDateKey, state.meals);
 }
 
 elements.mealButtons.forEach((button) => {
@@ -1488,6 +1567,11 @@ elements.mealButtons.forEach((button) => {
 elements.openAddFood.addEventListener("click", openSheet);
 elements.openProfile.addEventListener("click", openProfileModal);
 elements.openRecords.addEventListener("click", showRecordsView);
+elements.todayButton.addEventListener("click", () => {
+  elements.dateInput.showPicker?.();
+  if (!elements.dateInput.showPicker) elements.dateInput.click();
+});
+elements.dateInput.addEventListener("change", () => switchDate(elements.dateInput.value));
 elements.recordsBack.addEventListener("click", () => {
   if (elements.recordsBack.dataset.recordsBackMode === "list") {
     renderRecordList();
@@ -1533,6 +1617,6 @@ document.addEventListener("keydown", (event) => {
 
 renderActiveMeal();
 setGoalFactor(state.profile?.proteinFactor || 1, state.profile?.goalLabel || "日常維持");
-elements.todayLabel.textContent = formatTodayLabel();
+renderSelectedDate();
 renderSummary();
 if (!state.profile) openProfileModal();
