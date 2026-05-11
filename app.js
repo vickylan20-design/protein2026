@@ -1266,8 +1266,8 @@ function foodGroupKey(food) {
 
 const mealSortOrder = {
   breakfast: ["latte", "soy", "milk", "yogurt", "egg", "pancake", "burger"],
-  lunch: ["buffet", "protein", "bento", "side", "soup", "beef-noodle", "steak", "hotpot", "burger"],
-  dinner: ["bento", "side", "soup", "sushi", "buffet", "protein"],
+  lunch: ["buffet", "protein", "bento", "rice-meal", "side", "soup", "beef-noodle", "steak", "hotpot", "burger"],
+  dinner: ["bento", "rice-meal", "side", "soup", "sushi", "buffet", "protein"],
 };
 
 function mealSortBucket(food, meal) {
@@ -1286,6 +1286,7 @@ function mealSortBucket(food, meal) {
     if (food.id === "steak") return "steak";
     if (food.category === "meat" || food.category === "fish") return "protein";
     if (food.category === "bento") return "bento";
+    if (food.subcategory === "rice" || food.subcategory === "donburi") return "rice-meal";
     if (food.category === "side") return "side";
     if (food.subcategory === "soup") return "soup";
     if (food.id === "beef-noodle") return "beef-noodle";
@@ -1295,6 +1296,7 @@ function mealSortBucket(food, meal) {
 
   if (meal === "dinner") {
     if (food.category === "bento") return "bento";
+    if (food.subcategory === "rice" || food.subcategory === "donburi") return "rice-meal";
     if (food.category === "side") return "side";
     if (food.subcategory === "soup") return "soup";
     if (food.category === "sushi") return "sushi";
