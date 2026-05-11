@@ -1451,12 +1451,23 @@ function openSheet() {
   renderFoodResults();
   elements.sheetBackdrop.hidden = false;
   elements.addSheet.hidden = false;
+  document.documentElement.classList.add("is-sheet-open");
+  document.body.classList.add("is-sheet-open");
   window.setTimeout(() => elements.foodSearch.focus(), 30);
 }
 
 function closeSheet() {
   elements.sheetBackdrop.hidden = true;
   elements.addSheet.hidden = true;
+  document.documentElement.classList.remove("is-sheet-open");
+  document.body.classList.remove("is-sheet-open");
+}
+
+function keepSheetScrollInside(event) {
+  if (!elements.addSheet.hidden && !event.target.closest("#foodResults")) {
+    event.preventDefault();
+    elements.foodResults.scrollTop += event.deltaY;
+  }
 }
 
 function calculateProfileFromForm() {
@@ -1581,6 +1592,7 @@ elements.recordsBack.addEventListener("click", () => {
 });
 elements.closeSheet.addEventListener("click", closeSheet);
 elements.sheetBackdrop.addEventListener("click", closeSheet);
+elements.addSheet.addEventListener("wheel", keepSheetScrollInside, { passive: false });
 elements.profileBackdrop.addEventListener("click", closeProfileModal);
 elements.profileForm.addEventListener("submit", saveProfile);
 elements.weightInput.addEventListener("input", renderProfilePreview);

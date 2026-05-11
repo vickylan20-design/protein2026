@@ -35,6 +35,12 @@ button {
   cursor: pointer;
 }
 
+html.is-sheet-open,
+body.is-sheet-open {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
 [hidden] {
   display: none !important;
 }
@@ -584,6 +590,8 @@ h1 {
   min-height: 0;
   margin-top: 8px;
   overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .food-result {
