@@ -837,7 +837,7 @@ const foods = [
     protein_g: 18,
     calories: 430,
     egg_unit: 3,
-    meal_tags: ["dinner"],
+    meal_tags: ["lunch", "dinner"],
     estimate_type: "estimated",
     keywords: ["火鍋", "五花", "豬五花", "肉片", "晚餐"],
   },
@@ -850,7 +850,7 @@ const foods = [
     protein_g: 22,
     calories: 330,
     egg_unit: 4,
-    meal_tags: ["dinner"],
+    meal_tags: ["lunch", "dinner"],
     estimate_type: "estimated",
     keywords: ["火鍋", "梅花", "梅花豬", "豬肉", "肉片", "晚餐"],
   },
@@ -863,7 +863,7 @@ const foods = [
     protein_g: 24,
     calories: 300,
     egg_unit: 4,
-    meal_tags: ["dinner"],
+    meal_tags: ["lunch", "dinner"],
     estimate_type: "estimated",
     keywords: ["火鍋", "板腱牛", "牛肉", "肉片", "晚餐"],
   },
@@ -876,7 +876,7 @@ const foods = [
     protein_g: 20,
     calories: 520,
     egg_unit: 3,
-    meal_tags: ["dinner"],
+    meal_tags: ["lunch", "dinner"],
     estimate_type: "estimated",
     keywords: ["火鍋", "和牛", "牛肉", "肉片", "晚餐"],
   },
@@ -889,7 +889,7 @@ const foods = [
     protein_g: 18,
     calories: 170,
     egg_unit: 3,
-    meal_tags: ["dinner"],
+    meal_tags: ["lunch", "dinner"],
     estimate_type: "estimated",
     keywords: ["火鍋", "魚片", "魚肉", "晚餐"],
   },
@@ -902,7 +902,7 @@ const foods = [
     protein_g: 18,
     calories: 120,
     egg_unit: 3,
-    meal_tags: ["dinner"],
+    meal_tags: ["lunch", "dinner"],
     estimate_type: "estimated",
     keywords: ["火鍋", "白蝦", "蝦", "海鮮", "晚餐"],
   },
@@ -915,7 +915,7 @@ const foods = [
     protein_g: 22,
     calories: 130,
     egg_unit: 4,
-    meal_tags: ["dinner"],
+    meal_tags: ["lunch", "dinner"],
     estimate_type: "estimated",
     keywords: ["火鍋", "龍蝦", "海鮮", "晚餐"],
   },
@@ -928,7 +928,7 @@ const foods = [
     protein_g: 12,
     calories: 90,
     egg_unit: 2,
-    meal_tags: ["dinner"],
+    meal_tags: ["lunch", "dinner"],
     estimate_type: "estimated",
     keywords: ["火鍋", "蛤蠣", "蛤蜊", "海鮮", "晚餐"],
   },
@@ -941,7 +941,7 @@ const foods = [
     protein_g: 10,
     calories: 110,
     egg_unit: 2,
-    meal_tags: ["dinner"],
+    meal_tags: ["lunch", "dinner"],
     estimate_type: "estimated",
     keywords: ["火鍋", "豆腐", "晚餐"],
   },
@@ -1266,7 +1266,7 @@ function foodGroupKey(food) {
 
 const mealSortOrder = {
   breakfast: ["latte", "soy", "milk", "yogurt", "egg", "pancake", "burger"],
-  lunch: ["buffet", "protein", "bento", "side", "soup", "beef-noodle", "steak", "hotpot"],
+  lunch: ["buffet", "protein", "bento", "side", "soup", "beef-noodle", "steak", "hotpot", "burger"],
   dinner: ["bento", "side", "soup", "sushi", "buffet", "protein"],
 };
 
@@ -1290,6 +1290,7 @@ function mealSortBucket(food, meal) {
     if (food.subcategory === "soup") return "soup";
     if (food.id === "beef-noodle") return "beef-noodle";
     if (food.category === "hotpot") return "hotpot";
+    if (food.subcategory === "burger") return "burger";
   }
 
   if (meal === "dinner") {
