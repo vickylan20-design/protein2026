@@ -42,27 +42,29 @@ button {
 .phone-shell {
   position: relative;
   width: min(100vw, 393px);
-  height: min(100svh, 852px);
-  overflow: hidden;
+  min-height: 100svh;
+  overflow: auto;
   background: var(--bg);
-  display: flex;
-  flex-direction: column;
   padding: 8px 8px 0;
 }
 
 .home-view,
 .records-view {
   min-height: 0;
-  height: 100%;
   display: flex;
   flex-direction: column;
 }
 
 .top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 8px 12px;
+  margin: 0 -8px;
+  padding: 0 16px 12px;
+  background: var(--bg);
   color: #fff;
 }
 
@@ -215,8 +217,8 @@ h1 {
   background: var(--surface);
   border-radius: 24px;
   padding: 16px;
-  min-height: 0;
-  flex: 1;
+  height: 400px;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   gap: 13px;
@@ -258,6 +260,10 @@ h1 {
   background: var(--muted-surface);
   padding: 10px 15px;
   overflow: auto;
+}
+
+.food-list.is-empty {
+  overflow: hidden;
 }
 
 .food-row {
@@ -355,8 +361,8 @@ h1 {
 
 .summary-panel {
   flex: 0 0 auto;
-  margin: 12px -8px 0;
-  border-radius: 24px 24px 0 0;
+  margin: 12px 0 24px;
+  border-radius: 24px;
   background: var(--surface);
   padding: 22px 22px 26px;
 }

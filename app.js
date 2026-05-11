@@ -1000,10 +1000,12 @@ function renderMealList() {
   elements.activeMealTitle.textContent = mealLabels[meal];
 
   if (selectedFoods.length === 0) {
+    elements.mealFoodList.classList.add("is-empty");
     elements.mealFoodList.innerHTML = `<div class="empty-state">這餐還沒有蛋白質來源。<br />加一個常吃外食看看。</div>`;
     return;
   }
 
+  elements.mealFoodList.classList.remove("is-empty");
   elements.mealFoodList.innerHTML = selectedFoods
     .map(
       (entry, index) => `
