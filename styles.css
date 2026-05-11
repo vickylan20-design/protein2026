@@ -43,9 +43,9 @@ button {
   position: relative;
   width: min(100vw, 393px);
   min-height: 100svh;
-  overflow: auto;
+  overflow-x: hidden;
   background: var(--bg);
-  padding: 8px 8px 0;
+  padding: 52px 8px 0;
 }
 
 .home-view,
@@ -56,14 +56,16 @@ button {
 }
 
 .top-bar {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 5;
+  left: 50%;
+  z-index: 20;
+  width: min(100vw, 393px);
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 0 -8px;
-  padding: 0 16px 12px;
+  padding: 8px 16px 12px;
   background: var(--bg);
   color: #fff;
 }
@@ -902,7 +904,7 @@ h1 {
 
 @media (max-width: 360px) {
   .phone-shell {
-    padding-top: 8px;
+    padding-top: 52px;
   }
 
   .goal-card {
