@@ -183,6 +183,20 @@ h1 {
   color: var(--yellow);
 }
 
+.goal-count strong,
+.goal-count > span,
+.meal-ring strong {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.egg-unit {
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 800;
+}
+
 .meter-track {
   height: 4px;
   margin-top: 10px;
@@ -235,6 +249,7 @@ h1 {
 .meal-ring strong {
   font-size: 39px;
   line-height: 1;
+  justify-content: center;
 }
 
 .meal-panel {

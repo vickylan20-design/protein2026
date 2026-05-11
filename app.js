@@ -1134,6 +1134,10 @@ function formatEggs(value) {
   return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
 }
 
+function formatEggsWithUnit(value) {
+  return `${formatEggs(value)}<span class="egg-unit">顆</span>`;
+}
+
 function allSelectedFoods() {
   return Object.values(state.meals).flat();
 }
@@ -1191,11 +1195,11 @@ function renderMealList() {
 
 function renderSummary() {
   const goalEggs = dailyEggGoal();
-  elements.goalEggs.textContent = formatEggs(goalEggs);
+  elements.goalEggs.innerHTML = formatEggsWithUnit(goalEggs);
 
   Object.keys(mealLabels).forEach((meal) => {
     const mealEggs = state.meals[meal].reduce((total, entry) => total + entryEggs(entry), 0);
-    elements.mealCounts[meal].textContent = formatEggs(mealEggs);
+    elements.mealCounts[meal].innerHTML = formatEggsWithUnit(mealEggs);
   });
 
   const totalFoods = allSelectedFoods();
@@ -1204,7 +1208,7 @@ function renderSummary() {
   const completedEggs = totalProtein / EGG_PROTEIN_G;
   const rate = Math.round((completedEggs / goalEggs) * 100);
 
-  elements.completedEggs.textContent = formatEggs(completedEggs);
+  elements.completedEggs.innerHTML = formatEggsWithUnit(completedEggs);
   elements.goalFill.style.width = `${Math.min(rate, 100)}%`;
   elements.totalProtein.textContent = totalProtein;
   elements.totalCalories.textContent = totalCalories;
